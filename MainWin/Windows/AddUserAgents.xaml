@@ -1,0 +1,17 @@
+﻿<Window x:Class="MainWin.Windows.AddUserAgents"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:MainWin.Windows"
+        mc:Ignorable="d"
+        Title="AddUserAgents" Height="343.949" Width="542.038">
+    <Grid>
+        <Menu HorizontalAlignment="Stretch" VerticalAlignment="Top">
+            <MenuItem Header="Меню">
+                <MenuItem Header="Загрузить юзер агенты" Click="UploadUserAgentsMenuItem_Click"/>
+            </MenuItem>
+        </Menu>
+        <TextBox Margin="0,20,0,0" TextWrapping="Wrap" AcceptsReturn="True" Text="{Binding TextUserAgents, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
+    </Grid>
+</Window>

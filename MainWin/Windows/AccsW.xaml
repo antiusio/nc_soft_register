@@ -1,0 +1,32 @@
+﻿<Window x:Class="MainWin.Windows.AccsW"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:MainWin.Windows"
+        mc:Ignorable="d"
+        Title="Accounts" Height="450" Width="800">
+    <Grid>
+        <Menu>
+            <MenuItem Header="Меню">
+                <MenuItem Header="В файл" Click="ExportMenuItem_Click"/>
+            </MenuItem>
+        </Menu>
+        <DataGrid CanUserAddRows="False" DataContext="{Binding Path=ListAccs, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" ItemsSource="{Binding}" AutoGenerateColumns="False" Margin="0,20,0,0">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Status" Binding="{Binding status_}"/>
+                <DataGridTextColumn Header="Email" Binding="{Binding email}"/>
+                <DataGridTextColumn Header="Password" Binding="{Binding password_}"/>
+                <!--<DataGridTextColumn Header="Ip" Binding="{Binding ip}"/>
+                <DataGridTextColumn Header="Port" Binding="{Binding port}"/>-->
+                <DataGridTextColumn Header="Count try" Binding="{Binding count_try}"/>
+
+                <DataGridTextColumn Header="Date created" Binding="{Binding date_created}"/>
+                <DataGridTextColumn Header="Date registered" Binding="{Binding date_registered}"/>
+                <DataGridTextColumn Header="Date confirmed" Binding="{Binding date_confirmed}"/>
+
+
+            </DataGrid.Columns>
+        </DataGrid>
+    </Grid>
+</Window>

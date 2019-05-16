@@ -1,0 +1,138 @@
+﻿<Window x:Class="MainWin.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:MainWin"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="800" Loaded="Window_Loaded"
+        DataContext="{Binding RelativeSource={RelativeSource Self}}" Closing="Window_Closing">
+    <Grid>
+        <Menu VerticalAlignment="Top" HorizontalAlignment="Stretch">
+            <MenuItem Header="Меню">
+                <MenuItem Header="Настройки" Click="SettingsMenuItem_Click"/>
+                <MenuItem Header="Загрузить прокси" Click="UploadProxysMenuItem_Click"/>
+                <MenuItem Header="Загрузить почты" Click="UploadEmailsMenuItem_Click"/>
+                <MenuItem Header="Сформировать аккаунты" Click="CreateAccsMenuItem_Click"/>
+                <MenuItem Header="Начать процесс регистрации" Click="RegistrationProcessMenuItem_Click"/>
+                <MenuItem Header="Загрузить юзер агенты" Click="UserAgentsMenuItem_Click"/>
+                <MenuItem Header="Подтвердить зарегистрированные" Click="ConfirmMenuItem_Click"/>
+                <!--<MenuItem Header="Аккаунты" Click="AccountsMenuItem_Click"/>-->
+            </MenuItem>
+            <MenuItem Header="Аккаунты">
+                <MenuItem Header="Подтвержденные" Click="ConfirmedAccsMenuItem_Click"/>
+                <MenuItem Header="Зарегистрированные" Click="RegisteredMenuItem_Click"/>
+                <MenuItem Header="Все аккаунты" Click="AllAccsMenuItem_Click"/>
+            </MenuItem>
+            <MenuItem Header="Прокси">
+                <MenuItem Header="Проверить прокси" Click="CheckProxyMenuItem_Click"/>
+            </MenuItem>
+        </Menu>
+        <TabControl HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="0,20,0,0">
+            <TabItem Header="Действия">
+                <Grid Background="#FFE5E5E5">
+                    <DataGrid Name="DGWork" CanUserAddRows="False" AutoGenerateColumns="False" DataContext="{Binding Path=ListAccsProgram, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" ItemsSource="{Binding}">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Id" Binding="{Binding Id}"/>
+                            <DataGridTextColumn Header="Email" Binding="{Binding Email}"/>
+                            <DataGridTextColumn Header="Proxy" Binding="{Binding IpProxy}"/>
+                            <DataGridTextColumn Header="Reg. status" Binding="{Binding RegStatus}"/>
+                            <DataGridTextColumn Header="Id UserAgent" Binding="{Binding IdUserAgent}"/>
+                            <DataGridTemplateColumn Header="Current status">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Grid>
+                                            <ProgressBar Grid.Row="0" Grid.Column="0"  Minimum="0" Maximum="100" Value="{Binding Percentage,Mode=TwoWay}" ToolTip="{Binding OrderCounts,Mode=OneWay}">
+                                            </ProgressBar>
+                                            <TextBlock Grid.Row="0" Grid.Column="0" Text="{Binding StatusText,Mode=TwoWay}" HorizontalAlignment="Left" VerticalAlignment="Center"></TextBlock>
+                                        </Grid>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Аккаунты">
+                <Grid Background="#FFE5E5E5">
+                    <DataGrid Name="AccsDataGrid" CanUserAddRows="False" AutoGenerateColumns="False" DataContext="{Binding Path=ListAccounts, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" ItemsSource="{Binding}" PreviewKeyDown="AccsDGrid_PreviewKeyDown" CellEditEnding="AccsDataGrid_CellEditEnding">
+                        <DataGrid.Columns>
+                            <!--<DataGridTextColumn Header="Email id" Binding="{Binding email_id}"/>
+                            <DataGridTextColumn Header="Name" Binding="{Binding display_name}"/>-->
+                            <DataGridTextColumn Header="Id" Binding="{Binding Id}" IsReadOnly="True"/>
+                            <DataGridTextColumn Header="Status" Binding="{Binding Status}" IsReadOnly="True"/>
+                            <DataGridTextColumn Header="Email" Binding="{Binding Email}" IsReadOnly="True"/>
+                            <DataGridTextColumn Header="Password" Binding="{Binding Password}" IsReadOnly="True"/>
+
+                            <DataGridTextColumn Header="Id UserAgent" Binding="{Binding IdUserAgent}" IsReadOnly="True"/>
+
+                            <DataGridTextColumn Header="Display name" Binding="{Binding DisplayName}" IsReadOnly="False"/>
+
+                            <DataGridTextColumn Header="Date created" Binding="{Binding DateCreated}" IsReadOnly="True"/>
+                            <DataGridTextColumn Header="Date registered" Binding="{Binding DateRegistered}" IsReadOnly="True"/>
+                            <DataGridTextColumn Header="Date confirmed" Binding="{Binding DateConfirmed}" IsReadOnly="True"/>
+                            
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Прокси">
+                <Grid  Background="#FFE5E5E5">
+                    <DataGrid CanUserAddRows="False" AutoGenerateColumns="False" DataContext="{Binding Path=ListProxys, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" ItemsSource="{Binding}" Name="ProxysDataGrid"  PreviewKeyDown="ProxysDGrid_PreviewKeyDown" >
+                        <DataGrid.ItemContainerStyle>
+                            <Style TargetType="DataGridRow">
+                                <EventSetter Event="MouseDoubleClick" Handler="RowDoubleClick"/>
+                                <!--<EventSetter Event="MouseRightButtonUp" Handler="RowRightButtonUp"/>-->
+                            </Style>
+                        </DataGrid.ItemContainerStyle>
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Id" Binding="{Binding Id}"/>
+                            <DataGridTextColumn Header="Status" Binding="{Binding Status}"/>
+                            <DataGridTextColumn Header="Ip" Binding="{Binding Ip}"/>
+                            <DataGridTextColumn Header="Port" Binding="{Binding Port}"/>
+                            <DataGridTextColumn Header="Login" Binding="{Binding Login}"/>
+                            <DataGridTextColumn Header="Password" Binding="{Binding Password}"/>
+                            <DataGridTemplateColumn Header="Current status">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Grid>
+                                            <ProgressBar Grid.Row="0" Grid.Column="0"  Minimum="0" Maximum="100" Value="{Binding Percentage,Mode=TwoWay}" >
+                                            </ProgressBar>
+                                            <TextBlock Grid.Row="0" Grid.Column="0" Text="{Binding StatusText,Mode=TwoWay}" HorizontalAlignment="Left" VerticalAlignment="Center"></TextBlock>
+                                        </Grid>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Почты">
+                <Grid Background="#FFE5E5E5">
+                    <DataGrid  ItemsSource="{Binding}" DataContext="{Binding Path=ListEmails}" CanUserAddRows="False" AutoGenerateColumns="False" Name="EmailsDataGrid" PreviewKeyDown="EmailsDGrid_PreviewKeyDown">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Id" Binding="{Binding Id, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
+                            <DataGridTextColumn Header="Status" Binding="{Binding Status, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
+                            <DataGridTextColumn Header="Email" Binding="{Binding Email_, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
+                            <DataGridTextColumn Header="Password" Binding="{Binding Password, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
+                            <DataGridTextColumn Header="Confirm email" Binding="{Binding ConfirmEmail, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
+                            <!--<DataGridTextColumn Header="Phone confirm email" Binding="{Binding phone_confirm_email}"/>-->
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </Grid>
+            </TabItem>
+            <TabItem Header="User agents">
+                <Grid>
+                    <DataGrid DataContext="{Binding Path=ListUserAgents, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" ItemsSource="{Binding }" PreviewKeyDown="UserAgentsDataGrid_PreviewKeyDown" CanUserAddRows="False" AutoGenerateColumns="False">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Id" Binding="{Binding Path= Id, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
+                            <DataGridTextColumn Header="UserAgent" Binding="{Binding Path= Agent, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </Grid>
+                
+            </TabItem>
+        </TabControl>
+    </Grid>
+</Window>

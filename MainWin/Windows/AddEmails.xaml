@@ -1,0 +1,18 @@
+﻿<Window x:Class="MainWin.Windows.AddEmails"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:MainWin.Windows"
+        mc:Ignorable="d"
+        Title="AddEmails" Height="280.892" Width="441.72">
+    <Grid>
+        <Menu HorizontalAlignment="Stretch" VerticalAlignment="Top">
+            <MenuItem Header="Меню">
+                <MenuItem Header="Загрузить почты" Click="UploadEmailsMenuItem_Click"/>
+            </MenuItem>
+
+        </Menu>
+        <TextBox Margin="0,20,0,0" TextWrapping="Wrap" AcceptsReturn="True" Text="{Binding TextEmails, UpdateSourceTrigger=PropertyChanged}"/>
+    </Grid>
+</Window>

@@ -1,0 +1,17 @@
+﻿<Window x:Class="MainWin.Windows.SettingsW"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:MainWin.Windows"
+        mc:Ignorable="d"
+        Title="SettingsW" Height="259.5" Width="477.5" Closing="Window_Closing">
+    <Grid>
+        <TextBox HorizontalAlignment="Left" Height="22" Margin="111,52,0,0" TextWrapping="Wrap" Text="{Binding CaptchaApiKey, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Top" Width="120"/>
+        <Label Content="Captcha Api Key" HorizontalAlignment="Left" Margin="10,52,0,0" VerticalAlignment="Top"/>
+
+        <TextBox IsEnabled="False" HorizontalAlignment="Left" Height="22" Margin="111,98,0,0" TextWrapping="Wrap" Text="{Binding CountThreads, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Top" Width="120"/>
+        <Label Content="Count threads" HorizontalAlignment="Left" Margin="10,98,0,0" VerticalAlignment="Top"/>
+
+    </Grid>
+</Window>
