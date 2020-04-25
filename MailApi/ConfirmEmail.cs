@@ -131,10 +131,10 @@ namespace MailApi
                             {
                                 webElement.Click();
                                 Thread.Sleep(6000);
-                                webElement = browser.FindElement(By.XPath("//li/div[@role='button']"));
+                                webElement = browser.FindElement(By.XPath("//li//div[@class='vxx8jf']"));
                                 try
                                 {
-                                    var webElements = browser.FindElements(By.XPath("//li/div[@role='button']"));
+                                    var webElements = browser.FindElements(By.XPath("//li//div[@class='vxx8jf']"));
                                     if (webElements.Count >= 4)
                                     {
                                         webElement = webElements[3];
@@ -145,7 +145,7 @@ namespace MailApi
                                 {
                                     webElement.Click();
                                     Thread.Sleep(6000);
-                                    webElement = browser.FindElement(By.Id("identifierId"));
+                                    webElement = browser.FindElement(By.Id("knowledge-preregistered-email-response"));
                                     if (webElement != null)
                                     {
                                         webElement.SendKeys(confirmEmail);

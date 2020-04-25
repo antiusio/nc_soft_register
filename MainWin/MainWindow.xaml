@@ -31,7 +31,7 @@
         <TabControl HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="0,20,0,0">
             <TabItem Header="Действия">
                 <Grid Background="#FFE5E5E5">
-                    <DataGrid Name="DGWork" CanUserAddRows="False" AutoGenerateColumns="False" DataContext="{Binding Path=ListAccsProgram, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" ItemsSource="{Binding}">
+                    <DataGrid Name="DGWork" CanUserAddRows="False" AutoGenerateColumns="False" DataContext="{Binding Path=ListAccsProgram, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" ItemsSource="{Binding}" >
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="Id" Binding="{Binding Id}"/>
                             <DataGridTextColumn Header="Email" Binding="{Binding Email}"/>

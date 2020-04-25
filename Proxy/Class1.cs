@@ -12,21 +12,7 @@ using System.Windows.Forms;
 
 namespace Proxy
 {
-    //public class Class1
-    //{
-    //    public SshTunnel tunnel = null;
-    //    public void test()
-    //    {
-    //        ConnectionInfo connectionInfo = new ConnectionInfo("80.106.240.243",2222,"ubnt", 
-    //            new AuthenticationMethod[] 
-    //            { // Pasword based Authentication
-    //                new PasswordAuthenticationMethod("ubnt","ubnt")
-    //            }
-    //            );
-    //        tunnel = new SshTunnel(connectionInfo);
-    //        //Thread.Sleep(600000);
-    //    }
-    //}
+    
     public class SshTunnel : IDisposable
     {
         private SshClient client;
@@ -140,7 +126,7 @@ namespace Proxy
             ConnectionInfo connectionInfo = new ConnectionInfo(p.ip, p.port, p.login_,
                 new AuthenticationMethod[]
                 { // Pasword based Authentication
-                new PasswordAuthenticationMethod(p.login_,p.password_)
+                    new PasswordAuthenticationMethod(p.login_,p.password_)
                 }
                 );
             client = new SshClient(connectionInfo);
@@ -161,8 +147,6 @@ namespace Proxy
             client.Disconnect();
             client.Dispose();
             return "AllRight";
-
-
             
         }
 

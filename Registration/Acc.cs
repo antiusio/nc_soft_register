@@ -211,7 +211,7 @@ namespace Registration
                 bool fromBase = false;
                 bool registered = false;
                 if (RegStatus.Equals("created"))
-                    registered = registrationBrowser.StartRegistration(accDB,this);
+                    registered = registrationBrowser.StartRegistration2(accDB,this);
                 if (RegStatus.Equals("registered"))
                 {
                     registered = true;

@@ -35,7 +35,7 @@ namespace Registration
             //media.video_stats.enabled
             firefoxProfile.SetPreference("media.video_stats.enabled", false);
             //privacy.resistFingerprinting.reduceTimerPrecision.microseconds
-            firefoxProfile.SetPreference("privacy.resistFingerprinting.reduceTimerPrecision.microseconds", r.Next(20,100));
+            firefoxProfile.SetPreference("privacy.resistFingerprinting.reduceTimerPrecision.microseconds", r.Next(20, 100));
             //webgl.disabled
             firefoxProfile.SetPreference("webgl.disabled", true);
             //media.navigator.enabled
@@ -55,11 +55,11 @@ namespace Registration
             //gfx.downloadable_fonts.enabled
             firefoxProfile.SetPreference("gfx.downloadable_fonts.enabled", false);
 
-            
+
             //string pathToExtension = Directory.GetCurrentDirectory() + @"\Plugins\shape_shifter-0.0.2-an+fx.xpi";
             //firefoxProfile.AddExtension(pathToExtension);
             //firefoxProfile.SetPreference("extensions.shape_shifter.currentVersion", "0.0.2");
-            
+
 
             //pathToExtension = Directory.GetCurrentDirectory() + @"\Plugins\firebug-1.8.1.xpi";
             //firefoxProfile.AddExtension(pathToExtension);
@@ -82,8 +82,8 @@ namespace Registration
                     firefoxProfile.SetPreference("general.useragent.override", s);
                 }
             }
-            catch{ }
-            
+            catch { }
+
 
             //if (!allProfiles.ExistingProfiles.Contains("SeleniumUser"))
             //{
@@ -98,9 +98,9 @@ namespace Registration
             fireFoxOptions.SetPreference("network.proxy.socks", "127.0.0.1");
 
 
-            fireFoxOptions.SetPreference("network.proxy.socks_port", socksPort);    
-            
-            
+            fireFoxOptions.SetPreference("network.proxy.socks_port", socksPort);
+
+
             //fireFoxOptions.SetPreference("network.proxy.http", "7951");
             //fireFoxOptions.SetPreference("network.proxy.socks_port", 40348);
             fireFoxOptions.SetPreference("media.peerconnection.enabled", false);
@@ -112,7 +112,7 @@ namespace Registration
 
             //fireFoxOptions.SetLoggingPreference
             //Mozilla/5.0 (Linux; U; Android 4.4 Andro-id Build/KRT16S; X11; FxOS armv7I rv:29.0) MyWebkit/537.51.1 (KHTML, like Gecko) Gecko/29.0 Firefox/29.0
-            
+
 
             //profile.update_preferences()
 
@@ -123,7 +123,7 @@ namespace Registration
             browser = new FirefoxDriver(fireFoxOptions);
             //browser.Manage().Window.Size = new Size(1440, 900);
 
-            
+
 
         }
         public void Test()
@@ -136,8 +136,8 @@ namespace Registration
         }
         public bool SetTime()
         {
-            IWebElement webElement=null;
-            for (int i=0;i<=5;i++)
+            IWebElement webElement = null;
+            for (int i = 0; i <= 5; i++)
                 try
                 {
                     try
@@ -145,12 +145,12 @@ namespace Registration
                         browser.Navigate().GoToUrl("http://f.vision/");
                         Thread.Sleep(3000);
                     }
-                    
+
                     catch (Exception ex)
                     {
                         if (ex.Message != null && ex.Message.IndexOf("proxyConnectFailure") != -1)
                             return false;
-                        if (ex.InnerException!=null && ex.InnerException.Message.IndexOf("The operation has timed out") != -1)
+                        if (ex.InnerException != null && ex.InnerException.Message.IndexOf("The operation has timed out") != -1)
                         {
                             return false;
                         }
@@ -168,10 +168,10 @@ namespace Registration
                 {
                     return true;
                 }
-                
+
                 catch (Exception ex)
                 {
-                    if (ex.InnerException!=null && ex.InnerException.Message.IndexOf("The operation has timed out") != -1)
+                    if (ex.InnerException != null && ex.InnerException.Message.IndexOf("The operation has timed out") != -1)
                     {
                         return false;
                     }
@@ -180,7 +180,7 @@ namespace Registration
                         return false;
                     }
                 }
-            
+
             return false;
 
         }
@@ -190,7 +190,7 @@ namespace Registration
             {
                 browser.Navigate().GoToUrl(link);
             }
-            catch(OpenQA.Selenium.WebDriverException ex)
+            catch (OpenQA.Selenium.WebDriverException ex)
             {//если прокси сбросил подключение
 
             }
@@ -228,7 +228,7 @@ namespace Registration
                 if (browser.FindElement(By.TagName("iframe")) is null)
                     return false;
             }
-            catch{ return false; }
+            catch { return false; }
             try
             {
                 IWebElement webElement = null;
@@ -278,8 +278,361 @@ namespace Registration
         }
         public int indexTry = 0;
         //account acc;
+        public bool StartRegistration2(account acc, Acc accProgram)
+        {
+            int indexTry = 0;
+            bool emailRegistered;
+            RegisterData registerData = new RegisterData(acc);
+
+            StartRegisterLabel:
+            accProgram.Percentage = 10;
+            if (indexTry == 3)
+                return false;
+            indexTry++;
+            bool opened = GetRegisterPage(accProgram, indexTry);
+            if (!opened)
+                return false ;
+            bool dataInputed = SetRegisterDataOnPage(accProgram, registerData, indexTry);
+            if (!dataInputed)
+                goto StartRegisterLabel;
+
+            CaptchaSolveLabel:
+
+            bool captchaSolved = SolveCaptcha(accProgram, indexTry, registerData.ApiKey);
+            if (!captchaSolved)
+                return false;
+            bool? clicked=Clicking(accProgram, registerData, indexTry, out emailRegistered);
+            if (emailRegistered)
+                return false;
+            if (clicked is null)
+                goto CaptchaSolveLabel;
+            if (clicked == false)
+                goto StartRegisterLabel;
+            if(clicked==true)
+                return true;
+
+            return false;
+        }
+        private bool GetRegisterPage(Acc accProgram, int indexTry)
+        {
+            accProgram.StatusText = "[" + indexTry.ToString() + "] Получение страницы.";
+            try
+            {
+                browser.Navigate().GoToUrl(url);
+            }
+            catch { }
+            for (int i = 0; i < 9; i++)
+            {
+                if (CheckRegistrationWebPage())
+                    break;
+                try
+                {
+                    browser.Navigate().Refresh();
+                }
+                catch(Exception ex)
+                {
+                    if (ex.InnerException.ToString().Equals("The operation has timed out"))
+                    {
+                        if (i >= 3)
+                            return false;
+                    }
+                }
+                if (i == 8)
+                {
+                    accProgram.StatusText = "[" + indexTry + "] Даже не получилось зайти на страницу (8 перезагрузок, не все элементы загружаются)";
+                    accProgram.Percentage = 0;
+                    return false;
+                }
+            }
+            return true;
+        }
+        private class RegisterData
+        {
+            public RegisterData()
+            {
+                Email = null;
+                ApiKey = null;
+                Password = null;
+                UserName = null;
+                Year = null;
+                Month = null;
+                Day = null;
+            }
+            public RegisterData(account acc)
+            {
+                Month = acc.date_of_birth.Month.ToString();
+                if (Month.Length == 1)
+                    Month = "0" + Month;
+                Day = acc.date_of_birth.Day.ToString();
+                Year = acc.date_of_birth.Year.ToString();
+
+                using (NcSoftBase ncSoftBase = new NcSoftBase())
+                {
+                    Email = ncSoftBase.emails.Where(em => em.id.Equals(acc.email_id)).First().email1;
+                    ApiKey = ncSoftBase.settings.First().captcha_api_key;
+                }
+                UserName = acc.display_name;
+                Password = acc.password_;
+            }
+            public string Email { get; set; }
+            public string ApiKey { get; set; }
+            public string Password { get; set; }
+            public string UserName { get; set; }
+            public string Year { get; set; }
+            public string Month { get; set; }
+            public string Day { get; set; }
+        }
+        private bool SetRegisterDataOnPage(Acc accProgram, RegisterData registerData, int indexTry)
+        {
+            IWebElement iWebElement = null;
+            string startText = "[" + indexTry + "]";
+            accProgram.StatusText = startText + "Ввод email";
+            int j = 0;
+            for (j = 0; j < 8; j++)
+                try
+                {
+                    iWebElement = browser.FindElement(By.Id("loginName"));
+                    break;
+                }
+                catch { Thread.Sleep(600); }
+            if (j == 8)
+            {
+                accProgram.StatusText = "Ошибка при вводе данных";
+                accProgram.Percentage = 0;
+                return false;
+            }
+                    ((IJavaScriptExecutor)browser).ExecuteScript("document.getElementById('loginName').value='" + registerData.Email + "'", iWebElement);
+            accProgram.StatusText = startText + "Email введен";
+            ((IJavaScriptExecutor)browser).ExecuteScript("document.getElementById('password').value='" + registerData.Password + "'", iWebElement);
+            accProgram.StatusText = startText + "Пароль введен";
+            ((IJavaScriptExecutor)browser).ExecuteScript("document.getElementById('passwordRepeat').value='" + registerData.Password + "'", iWebElement);
+            accProgram.StatusText = startText + "Повтор пароля введен";
+            //id = userName
+            //проверка правильности логина - очень важно
+            for (; ; )
+            {
+                iWebElement = browser.FindElement(By.Id("userName"));
+                ((IJavaScriptExecutor)browser).ExecuteScript("document.getElementById('userName').value='" + registerData.UserName + "'", iWebElement);
+                iWebElement.Click();
+                var el = browser.FindElement(By.Id("displayname_invalid"));
+                if (el != null && !el.GetAttribute("class").Equals("msg"))
+                {
+                    accProgram.Percentage = 0;
+                    accProgram.StatusText = "This display name is unavailable.";
+                    registerData.UserName = accProgram.ChangeName();
+                    iWebElement = browser.FindElement(By.Id("userName"));
+                    iWebElement.Click();
+
+                    continue;
+                }
+                el = browser.FindElement(By.Id("displayname_banned"));
+                if (el != null && !el.GetAttribute("class").Equals("msg"))
+                {
+                    accProgram.Percentage = 0;
+                    accProgram.StatusText = "This display name cannot be used.";
+                    registerData.UserName = accProgram.ChangeName();
+                    iWebElement = browser.FindElement(By.Id("userName"));
+                    iWebElement.Click();
+                    continue;
+                    //return false;
+                }
+                break;
+            }
+
+            accProgram.StatusText = startText + "Логин введен";
+            IWebElement selectBox = null;
+            SelectElement selectElement = null;
+
+            //передвижение, чтобы поля были в области видимости
+            iWebElement = browser.FindElement(By.Id("birthMonth"));
+            ((IJavaScriptExecutor)browser).ExecuteScript("document.getElementById('birthMonth').scrollIntoView()", iWebElement);
+            for (int i = 0; i < 5; i++)
+            {
+                try
+                {
+                    selectBox = browser.FindElement(By.XPath("//select[@id='birthMonth']"));
+                    selectElement = new SelectElement(selectBox);
+                    selectElement.SelectByValue(registerData.Month);
+                    accProgram.StatusText = startText + "Месяц введен";
+                    break;
+                }
+                catch (Exception ex)
+                {
+                    Thread.Sleep(600);
+                }
+            }
+            for (int i = 0; i < 5; i++)
+            {
+                try
+                {
+                    selectBox = browser.FindElement(By.XPath("//select[@id='birthDay']"));
+                    selectElement = new SelectElement(selectBox);
+                    selectElement.SelectByValue(registerData.Day);
+                    accProgram.StatusText = startText + "День введен";
+                    break;
+                }
+                catch (Exception ex)
+                {
+                    Thread.Sleep(600);
+                }
+            }
+
+            //birthYear
+            for (int i = 0; i < 5; i++)
+            {
+                try
+                {
+                    selectBox = browser.FindElement(By.XPath("//select[@id='birthYear']"));
+                    selectElement = new SelectElement(selectBox);
+                    selectElement.SelectByValue(registerData.Year);
+                    accProgram.StatusText = startText + "Год введен";
+                    break;
+                }
+                catch (Exception ex)
+                {
+                    Thread.Sleep(600);
+                }
+            }
+
+            //id = chkSaveIp
+            iWebElement = browser.FindElement(By.Id("chkSaveIp"));
+            if (iWebElement != null)
+            {
+                //browser.FindElement(By.Id("chkSaveIp")).Text
+                for (int i = 0; i < 3; i++)
+                {
+                    //chkNews
+                    ((IJavaScriptExecutor)browser).ExecuteScript("document.getElementById('chkNews').checked = true", iWebElement);
+
+                    ((IJavaScriptExecutor)browser).ExecuteScript("document.getElementById('chkSaveIp').checked = false", iWebElement);
+                    //chkAgree
+                    ((IJavaScriptExecutor)browser).ExecuteScript("document.getElementById('chkAgree').checked = true", iWebElement);
+                    accProgram.StatusText = startText + "Чекбоксы проставлены";
+
+                    if (browser.FindElement(By.Id("chkAgree")).Selected == true && browser.FindElement(By.Id("chkSaveIp")).Selected == false && browser.FindElement(By.Id("chkNews")).Selected == true)
+                        break;
+                }
+            }
+            return true;
+        }
+        private bool SolveCaptcha(Acc accProgram, int indexTry, string apiKey)
+        {
+            IWebElement iWebElement = null;
+            string startText = "[" + indexTry.ToString() + "]";
+            accProgram.Percentage = 50;
+            accProgram.StatusText = startText + "Определение и ввод капчи";
+            //return;
+            try
+            {
+                rucaptcha(apiKey, accProgram);
+            }
+            catch (Exception ex)
+            {
+                accProgram.StatusText = startText + "Ошибка при вводе капчи";
+                return false;
+            }
+            accProgram.StatusText = startText + "Капча введена";
+            accProgram.Percentage = 70;
+            try
+            {
+                iWebElement = browser.FindElement(By.Id("btnConfirm"));
+            }
+            catch (Exception ex)
+            {
+                accProgram.Percentage = 0;
+                accProgram.StatusText = "После ввода капчи не получилось обнаружить кнопку";
+                return false;
+            }
+            return true;
+        }
+        private bool? Clicking(Acc accProgram, RegisterData registerData, int indexTry,out bool emailRegistered)
+        {
+            emailRegistered = false;
+            try
+            {
+                string startText = "[" + indexTry + "] ";
+                IWebElement iWebElement = browser.FindElement(By.Id("btnConfirm"));
+                accProgram.StatusText = startText + "Нажатие на кнопку";
+                for (int i = 0; i < 40; i++)
+                {
+                    try
+                    {
+                        ((IJavaScriptExecutor)browser).ExecuteScript("document.getElementById('btnConfirm').click()", iWebElement);
+                        Thread.Sleep(TimeSpan.FromSeconds(3));
+                        IWebElement content = browser.FindElement(By.Id("topHeader"));
+                        if (content != null)
+                        {
+                            content = browser.FindElement(By.Id("contentWrap"));
+                            string text = content.Text;
+
+                            if (text.IndexOf("Email Address") != -1)
+                                continue;
+                            if (text.IndexOf("Email verification failed.") != -1 || text.IndexOf("Account Creation Failed.") != -1)
+                            {
+                                //reristration again
+                                return false;
+                            }
+                            if (text.IndexOf("A verification email has been sent to the email address below.") != -1)
+                            {
+                                accProgram.Percentage = 70;
+                                accProgram.StatusText = startText+"Зарегистрировано";
+                                return true;
+                            }
+                        }
+
+                        try
+                        {
+                            var el = browser.FindElement(By.Id("email_existed"));
+                            if (el != null && !el.GetAttribute("class").Equals("msg"))
+                            {
+                                accProgram.Percentage = 0;
+                                accProgram.StatusText = startText+"Email уже зарегистрирован.";
+                                emailRegistered = true;
+                                return false;
+                            }
+                            el = browser.FindElement(By.Id("displayname_invalid"));
+                            if (el != null && !el.GetAttribute("class").Equals("msg"))
+                            {
+                                accProgram.Percentage = 0;
+                                accProgram.StatusText = "This display name is unavailable.";
+                                registerData.UserName = accProgram.ChangeName();
+                                iWebElement = browser.FindElement(By.Id("userName"));
+                                iWebElement.Click();
+                                ((IJavaScriptExecutor)browser).ExecuteScript("document.getElementById('userName').value='" + registerData.UserName + "'", iWebElement);
+                                accProgram.StatusText = startText + "Имя введено";
+                                return null;//нужно поменять имя и повторитьрегистрацию
+                                            //return false;
+                            }
+                            el = browser.FindElement(By.Id("displayname_banned"));
+                            if (el != null && !el.GetAttribute("class").Equals("msg"))
+                            {
+                                accProgram.Percentage = 0;
+                                accProgram.StatusText = "This display name cannot be used.";
+                                registerData.UserName = accProgram.ChangeName();
+                                iWebElement = browser.FindElement(By.Id("userName"));
+                                iWebElement.Click();
+                                ((IJavaScriptExecutor)browser).ExecuteScript("document.getElementById('userName').value='" + registerData.UserName + "'", iWebElement);
+                                accProgram.StatusText = startText + "Имя введено";
+                                return null;
+                                //return false;
+                            }
+
+                        }
+                        catch(Exception ex)
+                        { }
+                    }
+                    catch(Exception ex)
+                    { }
+                }
+
+                return false;
+            }
+            catch(Exception ex)
+            { return false; }
+        }
         public bool StartRegistration(account acc, Acc accProgram)
         {
+            #region part1
             for(; ; )
             {
                 break;
@@ -362,8 +715,9 @@ namespace Registration
                 }
             }
 
-           
+            #endregion
 
+            #region part2
             //iWebElement = browser.FindElement(By.XPath("//input[@class='gLFyf gsfi']"));
             if (true)//iWebElement != null)
             {
@@ -525,6 +879,8 @@ namespace Registration
                     //recaptcha();
                 }
             }
+            #endregion
+            #region part3 Captcha
             B:
             accProgram.Percentage = 50;
             accProgram.StatusText = startText + "Определение и ввод капчи";
@@ -551,6 +907,7 @@ namespace Registration
                 return false;
             }
             accProgram.StatusText = startText + "Отправка формы";
+            #endregion
             if (iWebElement != null)
             {
                 //iWebElement.Submit();
@@ -565,7 +922,7 @@ namespace Registration
                             webElement2 = browser.FindElement(By.Id("contentWrap"));
                             string text = webElement2.Text;
 
-                            if (text.IndexOf("Email verification failed.") != -1)
+                            if (text.IndexOf("Email verification failed.") != -1||text.IndexOf("Account Creation Failed.")!=-1)
                             {
                                 //reristration again
                                 goto A;
@@ -585,7 +942,7 @@ namespace Registration
                         //document.getElementById('btnConfirm').click()
                         //iWebElement.Click();
                         ((IJavaScriptExecutor)browser).ExecuteScript("document.getElementById('btnConfirm').click()", iWebElement);
-                        Thread.Sleep(800);
+                        Thread.Sleep(TimeSpan.FromSeconds(1.5));
                         try
                         {
                             var el = browser.FindElement(By.Id("email_existed"));
@@ -646,13 +1003,13 @@ namespace Registration
                     catch (Exception ex)
                     {
                         accProgram.StatusText = startText + ex.Message;
-                        Thread.Sleep(1000);
+                        Thread.Sleep(TimeSpan.FromSeconds(2));
                         try
                         {
                             var webElement2 = browser.FindElement(By.Id("contentWrap"));
                             string text = webElement2.Text;
 
-                            if (text.IndexOf("Email verification failed.") != -1)
+                            if (text.IndexOf("Email verification failed.") != -1 || text.IndexOf("Account Creation Failed.") != -1)
                             {
                                 //reristration again
                                 goto A;
@@ -667,7 +1024,7 @@ namespace Registration
                         }
                         catch { break; }
                     }
-                    Thread.Sleep(500);
+                    Thread.Sleep(TimeSpan.FromSeconds(3));
                 }
                 accProgram.Percentage = 0;
                 accProgram.StatusText = "Не получилось перейти на следующую страницу";

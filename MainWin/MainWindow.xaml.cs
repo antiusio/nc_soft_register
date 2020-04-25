@@ -94,27 +94,10 @@ namespace MainWin
         double height;
         public MainWindow()
         {
-            //string s1 = "https://account.ncsoft.com/signup/activate?lang=en_US&serviceCode=13&loginName=nomegaikatate68@gmail.com&returnUrl=&encAuthString=vLp%2BsofQj6viyTfMMzis37aKLgMBwCWdQiYGE5kbbwgI%2FTth7qoTmgPI0bToRz7faqrPr6SDw8Mdf6xVgGt%2FE9tQGJsOaYXr5GUuRcZv9FMdy91eV60t6kOko1g%2FPFeAtR0PIUgdOasLyHnh%2FphGX8XQGQC3HvuMyzuzRDXj83IG3YFNdmw1llcb0nTR36Ug";
-            //string s2 = "https://account.ncsoft.com/signup/activate?lang=en_US&serviceCode=13&loginName=nomegaikatate68@gmail.com&returnUrl=&encAuthString=vLp%2BsofQj6viyTfMMzis37aKLgMBwCWdQiYGE5kbbwgI%2FTth7qoTmgPI0bToRz7faqrPr6SDw8Mdf6xVgGt%2FE9tQGJsOaYXr5GUuRcZv9FMdy91eV60t6kOko1g%2FPFeAtR0PIUgdOasLyHnh%2FphGX8XQGQC3HvuMyzuzRDXj83IG3YFNdmw1llcb0nTR36Ug";
-            //var v = s1.Equals(s2);
-            //string s1 = Gmail.GetConfirmLink2("gimamneupa824@gmail.com", "hGrS5XgAmH2", "");
-            //string s2 = "https://account.ncsoft.com/signup/activate?lang=en_US&serviceCode=13&loginName=tilzeobamti72@gmail.com&returnUrl=&encAuthString=ZY8TV4c07L8XtnZtizpLtb4Z8p6ewOGtFNdU6vpwyvINbgq0dFe1z3wFLz%2FLzIeR3KYhClMiAxMp520jmp8T8tuavSzGt45vy6B%2BQFNHnWSlm5ur70ru9L87%2FtMMQw9RvGBfOtH6F2rhS46HafH%2F%2B82FXu3rKEdtCpNYtRUPmTuYouHvydvKQ3Q%2BiA9qX%2B%2FY";
-            //var v = s1.Equals(s2);
-            //Gmail.GetConfirmLink2("radobel140@gmail.com", "ffLML92ll97", "adjihalilgorelyi88@mail.ru");
-            //radobel140@gmail.com;ffLML92ll97;+79172615513;adjihalilgorelyi88@mail.ru
-            //Gmail.ConfirmEmail("bryantymundell99@gmail.com", "3DQVg8Y7CQ", "clementgsosyfc@outlook.com");
-            //Repair();
-            //UseBase useBase=new UseBase();
-            //MailRepository mailRep = new MailRepository();
-            //GetAllEmails();
-            //RegistrationBrowser rb = new RegistrationBrowser(37662);
-            //rb.StartRegistration(new account() { });
-            //SetEnvironment se = new SetEnvironment();
-            //se.SetTimeZone("0200");
-            Protection();
+            
             InitializeComponent();
-            Protection2Hour();
-            Protection10Hour();
+            //Protection2Hour();
+            //Protection10Hour();
 
             width = System.Windows.SystemParameters.PrimaryScreenWidth;
             height = System.Windows.SystemParameters.PrimaryScreenHeight;
@@ -348,7 +331,11 @@ namespace MainWin
             myDataContext.RefreshUserAgentsInfo();
             //ProxysDataGrid.Items.Refresh();
         }
-        
+        public void RefreshAccsWork()
+        {
+            myDataContext.RefreshAccsProgramInfo();
+        }
+
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             Repair.RepairDB();
@@ -635,5 +622,7 @@ namespace MainWin
             
             
         }
+
+        
     }
 }
