@@ -113,6 +113,7 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <DependentUpon>NcSoftBase.mdf</DependentUpon>
     </Content>
+    <Content Include="Files\DataBase\SQLQuery1.sql" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
